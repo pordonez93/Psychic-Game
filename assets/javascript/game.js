@@ -11,21 +11,44 @@ var userChoiceText = document.getElementById("userchoice-text");
 var winsText = document.getElementById("wins-text");
 var lossesText = document.getElementById("losses-text");
 var guessesText = document.getElementById("guesses-left");
-// compares users guess and computers guess and adds points to wins or losses
+
+// function to restart game
+function restart() {
+    computerGuess = computerChoice[Math.floor(Math.random() * computerChoice.length)];
+    guessesLeft = 9;
+    userChoiceText.innerHTML= " ";
+    guessedLetters.innerHTML = " ";
+}
+
+restart();
 document.onkeyup = function(event){
     var userGuess = String.fromCharCode(event.keyCode).toLowerCase();
     var computerGuess = computerChoice[Math.floor(Math.random() * computerChoice.length)];
-        if (userGuess === computerGuess){
+        //Alerts user if they didn't select a letter key
+        if (computerChoice.indexOf(userGuess) === -1){
+            alert("That is not a letter! Choose again.");
+            return
+        }
+        //compares userguess and computerguess and assigns points accordingly
+        if (userGuess === computerGuess && guessesLeft > 0){
             wins++;
-        }else{
-            losses++;
+            // console.log(computerChoice);
+            restart();
+        }else if (guessesLeft > 0){
             guessesLeft--;
             guessedLetters.push(userGuess);
+            console.log(userGuess);
+        //if user runs out of guess/equals 0, guesses resets and a point is added to losses
+        }else{
+            losses++;
+            userChoiceText.innerHTML= " ";
+            restart();
         }
-    
+// prints out results to page
     winsText.textContent = "Wins: " + wins;
     lossesText.textContent = "Losses: " + losses;
     guessesText.textContent = "Guesses left: " + guessesLeft;
     userChoiceText.textContent= "Your guesses so far: " + guessedLetters
-
+// if guesses remaining = 0 add to losses and reset
+// if user wins reset game
 }
